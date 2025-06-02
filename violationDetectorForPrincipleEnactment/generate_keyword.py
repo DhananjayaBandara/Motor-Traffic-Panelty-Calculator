@@ -23,7 +23,7 @@ def extract_keywords(sentence):
     
     return top_keywords
 
-def extract_keywords_tfidf(sentences, top_n=5):
+def extract_keywords_tfidf(sentences, top_n=10):
     # Initialize TF-IDF Vectorizer
     vectorizer = TfidfVectorizer(stop_words='english', max_features=1000)
     tfidf_matrix = vectorizer.fit_transform(sentences)
@@ -42,8 +42,11 @@ def extract_keywords_tfidf(sentences, top_n=5):
 # Read the CSV file
 df = pd.read_csv('offence.csv')
 
-# Apply TF-IDF keyword extraction to all offence descriptions
-df['Keywords'] = extract_keywords_tfidf(df['Offence'])
+# Combine 'Offence' and 'Description of offence' columns for keyword extraction
+combined_text = df['Offence'].astype(str) + ' ' + df['Description of offence'].astype(str)
+
+# Apply TF-IDF keyword extraction to the combined text
+df['Keywords'] = extract_keywords_tfidf(combined_text, top_n=10)
 
 # Display the results in the command line
 for index, row in df.iterrows():
