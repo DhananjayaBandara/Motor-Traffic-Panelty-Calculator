@@ -5,9 +5,23 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from openai import OpenAI
 from dotenv import load_dotenv
+import string
+import nltk
+from nltk.stem import PorterStemmer
 
 # Load environment variables
 load_dotenv()
+
+nltk.download('punkt', quiet=True)
+
+def normalize_and_stem(text):
+    # Lowercase, remove punctuation, and stem
+    text = text.lower()
+    text = text.translate(str.maketrans('', '', string.punctuation))
+    tokens = nltk.word_tokenize(text)
+    stemmer = PorterStemmer()
+    stemmed = [stemmer.stem(token) for token in tokens]
+    return ' '.join(stemmed)
 
 class OffenceDetector:
     def __init__(self):
@@ -17,14 +31,23 @@ class OffenceDetector:
         # Load offence data
         self.df = pd.read_csv("offence_updated.csv")
         
-        # Prepare TF-IDF vectors
-        self.tfidf = TfidfVectorizer(stop_words="english")
-        self.texts = self.df["Offence"] + " " + self.df["Keywords"]
+        # Prepare TF-IDF vectors using Offence, Description of offence, and Keywords
+        self.tfidf = TfidfVectorizer(
+            stop_words="english",
+            ngram_range=(1, 2),  # Use unigrams and bigrams
+            preprocessor=normalize_and_stem
+        )
+        self.texts = (
+            self.df["Offence"].fillna('') + " " +
+            self.df["Description of offence"].fillna('') + " " +
+            self.df["Keywords"].fillna('')
+        )
         self.tfidf_matrix = self.tfidf.fit_transform(self.texts)
 
-    def find_relevant_offences(self, query, threshold=0.3):
-        # Convert query to TF-IDF vector
-        query_vec = self.tfidf.transform([query])
+    def find_relevant_offences(self, query, threshold=0.15):
+        # Normalize and stem query to match vectorizer preprocessor
+        norm_query = normalize_and_stem(query)
+        query_vec = self.tfidf.transform([norm_query])
         
         # Calculate cosine similarities
         similarities = cosine_similarity(query_vec, self.tfidf_matrix)
@@ -46,7 +69,7 @@ class OffenceDetector:
         
         # Step 2: LLM validation
         offences_list = "\n".join(
-            f"Index: {row['Index']}\nOffence: {row['Offence']}\nKeywords: {row['Keywords']}" 
+            f"Index: {row['Index']}\nOffence: {row['Offence']}\nDescription: {row['Description of offence']}\nKeywords: {row['Keywords']}" 
             for _, row in relevant_df.iterrows()
         )
         
