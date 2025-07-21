@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Fine Detection System</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Enhanced Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-shield-alt"></i> Traffic Fine Detection System</h1>
+        
+        <!-- Tab Navigation -->
+        <div class="tab-container">
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="onspot">
+                    <span><i class="fas fa-ticket-alt"></i> On Spot Fine</span>
+                </button>
+                <button class="tab-btn" data-tab="court">
+                    <span><i class="fas fa-gavel"></i> Court Fine</span>
+                </button>
+            </div>
+            
+            <!-- On Spot Fine Tab Content -->
+            <div class="tab-content active" id="onspot-tab">
+                <div class="input-group">
+                    <label class="input-label" for="scenarioInput">
+                        <i class="fas fa-edit"></i> Describe the Traffic Violation
+                    </label>
+                    <textarea 
+                        id="scenarioInput" 
+                        placeholder="Enter detailed description of the traffic offense (e.g., speeding, running red light, illegal parking, etc.)..."
+                    ></textarea>
+                </div>
+                <button id="analyzeBtn" class="btn-primary">
+                    <i class="fas fa-search"></i> Analyze Violation
+                </button>
+                
+                <!-- Enhanced Loading Animation -->
+                <div id="loading" class="loading">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Analyzing traffic violation<span class="loading-dots"></span></div>
+                    <div class="loading-progress">
+                        <div class="loading-progress-bar"></div>
+                    </div>
+                </div>
+                
+                <!-- Results will be rendered as a table below -->
+                <div id="results" class="results-table-wrapper"></div>
+            </div>
+            
+            <!-- Court Fine Tab Content -->
+            <div class="tab-content" id="court-tab">
+                <div class="input-group">
+                    <label class="input-label" for="courtScenarioInput">
+                        <i class="fas fa-balance-scale"></i> Describe the Traffic Violation for Court Proceedings
+                    </label>
+                    <textarea 
+                        id="courtScenarioInput" 
+                        placeholder="Enter detailed description of the traffic offense for court fine assessment (include severity, circumstances, etc.)..."
+                    ></textarea>
+                </div>
+                <button id="courtAnalyzeBtn" class="btn-primary">
+                    <i class="fas fa-gavel"></i> Analyze Court Penalties
+                </button>
+                
+                <!-- Enhanced Loading Animation -->
+                <div id="courtLoading" class="loading">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Processing court fine assessment<span class="loading-dots"></span></div>
+                    <div class="loading-progress">
+                        <div class="loading-progress-bar"></div>
+                    </div>
+                </div>
+                
+                <!-- Results will be rendered as a table below -->
+                <div id="courtResults" class="results-table-wrapper"></div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
