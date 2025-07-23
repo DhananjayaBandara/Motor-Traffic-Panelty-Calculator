@@ -6,23 +6,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 # Load spaCy's pre-trained model
 nlp = spacy.load('en_core_web_sm')
 
-def extract_keywords(sentence):
-    # Process the sentence using spaCy NLP model
-    doc = nlp(sentence)
-    
-    # Filter tokens to get nouns, adjectives, proper nouns, and verbs, excluding stop words
-    keywords = [token.text.lower() for token in doc if token.pos_ in ['NOUN', 'ADJ', 'PROPN', 'VERB'] and not token.is_stop]
-    
-    # Fallback to other non-stop words if no relevant tokens are found
-    if not keywords:
-        keywords = [token.text.lower() for token in doc if not token.is_stop and token.is_alpha]
-    
-    # Count keyword frequency and select top 5 for better accuracy
-    word_counts = Counter(keywords)
-    top_keywords = [word for word, _ in word_counts.most_common(5)]
-    
-    return top_keywords
-
 def extract_keywords_tfidf(sentences, top_n=10):
     # Initialize TF-IDF Vectorizer
     vectorizer = TfidfVectorizer(stop_words='english', max_features=1000)
