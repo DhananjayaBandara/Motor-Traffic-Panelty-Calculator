@@ -1,0 +1,10 @@
+pandas
+numpy
+scikit-learn
+rank_bm25
+sentence-transformers
+transformers
+torch
+tqdm
+python-dotenv
+openai
